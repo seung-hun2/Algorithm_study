@@ -9,6 +9,7 @@ public class maximumNminimum {
         int max = Integer.MIN_VALUE;
         int min = Integer.MAX_VALUE;
         int cnt = st.countTokens();
+
         for(int i=0;i<cnt;i++){
             int num = Integer.parseInt(st.nextToken());
 
