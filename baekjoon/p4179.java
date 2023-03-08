@@ -21,42 +21,74 @@ public class p4179 {
         StringTokenizer st = new StringTokenizer(br.readLine()," ");
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        arr = new int[C][R];
-        int[][] fire = new int[C][R];
-        visited = new boolean[C][R];
+        arr = new int[R][C];
+        visited = new boolean[R][C];
+        Queue<Node> queue1 = new LinkedList<>();
+        Queue<Node> queue2 = new LinkedList<>();
 
-        Node node1 = null;
-        Node node2 = null;
-        for(int i=0;i<C;i++){
+        for(int i=0;i<R;i++){
             String str = br.readLine();
-            for(int j=0;j<str.length();j++){
+            for(int j=0;j<C;j++){
                 if(str.charAt(j) == 'J') {
                     arr[i][j] = 1;
-                    node1 = new Node(i,j);
+                    queue1.add(new Node(i,j));
                 }
                 if(str.charAt(j) == 'F') {
-                    fire[i][j] = 1;
-                    node2 = new Node(i,j);
+                    arr[i][j] = -2;
+                    queue2.add(new Node(i,j));
                 }
                 if(str.charAt(j) == '#') {
                     arr[i][j] = -1;
-                    fire[i][j] = -1;
                 }
                 if(str.charAt(j) == '.') {
-                    fire[i][j] = 0;
                     arr[i][j] = 0;
                 }
 
             }
         }
 
-        Queue<Node> queue1 = new LinkedList<>();
-        Queue<Node> queue2 = new LinkedList<>();
-        queue1.add(node1);
+        int answer = 0;
+        while(true){
+            answer++;
+            int fs = queue2.size();
+            while(fs>0) {
+                fs--;
+                Node node = queue2.poll();
+                int y = node.y;
+                int x = node.x;
+                for (int i = 0; i < 4; i++) {
+                    if (x + dx[i] >= 0 && x + dx[i] < C && y + dy[i] > 0 && y + dy[i] < R) {
+                        if (arr[y + dy[i]][x + dx[i]] >= 0) {
+                            queue2.add(new Node(y + dy[i], x + dx[i]));
+                            arr[y + dy[i]][x + dx[i]] = -2;
+                        }
+                    }
+                }
+            }
+            int js = queue1.size();
+            while(js>0){
+                js--;
+                Node node = queue1.poll();
+                int y = node.y;
+                int x = node.x;
+                for(int i=0; i<4; i++){
+                    if (x+dx[i] < 0 || x+dx[i] >= C || y+dy[i]< 0 || y+dy[i] >= R){
+                        System.out.println(answer);
+                        return;
+                    }
+                    if(arr[y+dy[i]][x+dx[i]] ==0){
+                        queue1.add(new Node(y+dy[i], x+dx[i]));
+                        arr[y+dy[i]][x+dx[i]] = 1;
+                    }
+                }
+            }
+            if(queue1.isEmpty()){
+                System.out.println("IMPOSSIBLE");
+                return;
+            }
+        }
 
 
-
-        System.out.println(cnt);
     }//
     public static class Node{
         int x,y;
